@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gerenciador de Marmitas</title>
     <style>
-        /* ESTILO PROFISSIONAL (DARK MODE) - Final Gold */
+        /* ESTILO PROFISSIONAL (DARK MODE) - Versão Final com Rodapé */
         body {
             background-color: #121212 !important;
             color: #e0e0e0 !important;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* HEADER LIMPO */
@@ -160,6 +163,17 @@
             background: #e74c3c;
             color: white;
         }
+
+        /* RODAPÉ */
+        footer {
+            margin-top: auto; /* Empurra pro final da tela */
+            padding-top: 40px;
+            padding-bottom: 10px;
+            text-align: center;
+            border-top: 1px solid #333;
+            color: #555;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -204,6 +218,10 @@
     </div>
     
     <div id="lista"></div>
+
+    <footer>
+        <p>Criado por Elisa Thomaz Cavalcanti - 2026</p>
+    </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -306,7 +324,7 @@
                         const diff = agora - p.id;
                         elTimer.innerText = formatarTempo(diff);
 
-                        // Alerta visual discreto (amarelo > 5min, vermelho > 10min)
+                        // Alerta visual discreto
                         if (diff > 600000) { 
                             elTimer.style.color = '#e74c3c'; // Vermelho
                         } else if (diff > 300000) {
