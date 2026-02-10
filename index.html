@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Gerenciador de Marmitas</title>
+    <title>Gerenciador de Marmitas - UX Edition</title>
     <style>
-        /* ESTILO PROFISSIONAL (DARK MODE) - Versão Final com Rodapé */
+        /* ESTILO PROFISSIONAL (DARK MODE) - v1.2 UX Edition */
         body {
             background-color: #121212 !important;
             color: #e0e0e0 !important;
@@ -17,7 +17,6 @@
             min-height: 100vh;
         }
 
-        /* HEADER LIMPO */
         header {
             text-align: center;
             padding-bottom: 20px;
@@ -25,28 +24,16 @@
             margin-bottom: 25px;
         }
         
-        h1 { 
-            color: #ff9f43; /* Laranja da identidade visual */
-            margin: 0; 
-            font-size: 22px; 
-            letter-spacing: -0.5px; 
-            font-weight: 600;
-        }
-        
-        p { 
-            color: #7f8c8d; 
-            font-size: 13px; 
-            margin-top: 5px; 
-            font-weight: 400;
-        }
+        h1 { color: #ff9f43; margin: 0; font-size: 22px; letter-spacing: -0.5px; font-weight: 600; }
+        p { color: #7f8c8d; font-size: 13px; margin-top: 5px; font-weight: 400; }
 
-        /* INPUTS SÓBRIOS */
         .input-group {
             margin-bottom: 15px;
             background: #1e1e1e;
             padding: 12px;
             border-radius: 6px;
             border: 1px solid #333;
+            transition: border-color 0.3s; /* Transição suave */
         }
 
         label {
@@ -69,13 +56,31 @@
             border-radius: 4px;
             box-sizing: border-box; 
             outline: none;
+            transition: all 0.3s;
         }
 
-        input:focus, select:focus {
-            border-color: #ff9f43;
-        }
+        input:focus, select:focus { border-color: #ff9f43; }
 
-        /* BOTÃO PRINCIPAL */
+        /* --- NOVOS ESTILOS DE UX/ERRO --- */
+        .erro-input {
+            border-color: #e74c3c !important; /* Vermelho de erro */
+            background-color: #2c1f1f !important;
+        }
+        
+        .erro-msg {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none; /* Escondido por padrão */
+            font-weight: 500;
+        }
+        
+        /* Quando o grupo tem erro, mostra a mensagem */
+        .input-group.erro .erro-msg { display: block; }
+        .input-group.erro { border-color: #e74c3c; }
+        /* -------------------------------- */
+
+
         button#btn-add {
             width: 100%;
             background-color: #ff9f43;
@@ -94,7 +99,6 @@
         
         button#btn-add:active { background-color: #e67e22; }
 
-        /* LISTA DE PEDIDOS */
         .list-header {
             display: flex; 
             justify-content: space-between; 
@@ -104,24 +108,12 @@
             padding-bottom: 10px;
         }
 
-        .list-title {
-            margin: 0; 
-            color: #f1f2f6; 
-            font-size: 16px; 
-            font-weight: 600;
-        }
-
+        .list-title { margin: 0; color: #f1f2f6; font-size: 16px; font-weight: 600; }
         .count-badge {
-            background: #2f3542; 
-            color: #ff9f43; 
-            padding: 2px 10px; 
-            border-radius: 12px; 
-            font-size: 12px; 
-            font-weight: bold;
-            border: 1px solid #444;
+            background: #2f3542; color: #ff9f43; padding: 2px 10px; 
+            border-radius: 12px; font-size: 12px; font-weight: bold; border: 1px solid #444;
         }
 
-        /* CARD DO PEDIDO */
         .card-pedido {
             background-color: #1e1e1e;
             margin-top: 10px;
@@ -131,48 +123,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            animation: slideIn 0.3s ease-out;
         }
+        
+        @keyframes slideIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
 
-        .info-timer {
-            text-align: right;
-            min-width: 90px;
-        }
-
-        .timer-display {
-            color: #bdc3c7;
-            font-family: monospace;
-            font-size: 13px;
-            margin-bottom: 8px;
-            display: block;
-        }
+        .info-timer { text-align: right; min-width: 90px; }
+        .timer-display { color: #bdc3c7; font-family: monospace; font-size: 13px; margin-bottom: 8px; display: block; }
 
         .btn-finish {
-            background: transparent;
-            color: #e74c3c;
-            border: 1px solid #e74c3c;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 11px;
-            cursor: pointer;
-            text-transform: uppercase;
-            transition: all 0.2s;
+            background: transparent; color: #e74c3c; border: 1px solid #e74c3c;
+            padding: 6px 12px; border-radius: 4px; font-weight: 600; font-size: 11px;
+            cursor: pointer; text-transform: uppercase; transition: all 0.2s;
         }
 
-        .btn-finish:hover {
-            background: #e74c3c;
-            color: white;
-        }
+        .btn-finish:hover { background: #e74c3c; color: white; }
 
-        /* RODAPÉ */
         footer {
-            margin-top: auto; /* Empurra pro final da tela */
-            padding-top: 40px;
-            padding-bottom: 10px;
-            text-align: center;
-            border-top: 1px solid #333;
-            color: #555;
-            font-size: 12px;
+            margin-top: auto; padding-top: 40px; padding-bottom: 10px;
+            text-align: center; border-top: 1px solid #333; color: #555; font-size: 12px;
         }
     </style>
 </head>
@@ -184,9 +153,10 @@
     </header>
 
     <div id="formulario">
-        <div class="input-group">
+        <div class="input-group" id="grupo-nome">
             <label>Nome do Cliente</label>
             <input type="text" id="nome" placeholder="Digite o nome..." autocomplete="off">
+            <span class="erro-msg">⚠️ Por favor, informe o nome do cliente.</span>
         </div>
 
         <div class="input-group">
@@ -229,32 +199,60 @@
             const listaEl = document.getElementById('lista');
             const contadorEl = document.getElementById('contador');
             const btnAdd = document.getElementById('btn-add');
+            // Elementos para validação de UX
+            const inputNome = document.getElementById('nome');
+            const grupoNome = document.getElementById('grupo-nome');
+
             let pedidos = [];
 
-            // Carregar dados
             try {
-                const dados = localStorage.getItem('marmita_manager_final');
+                const dados = localStorage.getItem('marmita_manager_ux');
                 if (dados) pedidos = JSON.parse(dados);
             } catch (e) { console.error("Erro ao carregar dados", e); }
 
-            // Inicialização
             renderizarEstrutura();
             setInterval(atualizarRelogios, 1000);
 
-            // Adicionar Pedido
+            // --- FUNÇÃO DE VALIDAÇÃO VISUAL (UX) ---
+            function validarFormulario() {
+                const valorNome = inputNome.value.trim();
+                
+                if (valorNome === "") {
+                    // Adiciona classes de erro visualmente
+                    inputNome.classList.add('erro-input');
+                    grupoNome.classList.add('erro');
+                    inputNome.focus();
+                    return false; // Falhou na validação
+                } else {
+                    // Remove classes se estiver tudo ok
+                    inputNome.classList.remove('erro-input');
+                    grupoNome.classList.remove('erro');
+                    return true; // Passou
+                }
+            }
+
+            // Limpa o erro assim que a pessoa começa a digitar (Boa UX)
+            inputNome.addEventListener('input', function() {
+                 if(inputNome.classList.contains('erro-input')) {
+                    inputNome.classList.remove('erro-input');
+                    grupoNome.classList.remove('erro');
+                 }
+            });
+            // -----------------------------------------
+
+
             btnAdd.addEventListener('click', function() {
-                const nome = document.getElementById('nome').value;
+                // Chama a validação visual antes de prosseguir
+                if (!validarFormulario()) {
+                    return; // Para tudo se a validação falhar
+                }
+
                 const prato = document.getElementById('prato').value;
                 const tamanho = document.getElementById('tamanho').value;
 
-                if (!nome.trim()) { 
-                    alert("Por favor, informe o nome do cliente."); 
-                    return; 
-                }
-
                 pedidos.push({ 
                     id: Date.now(), 
-                    nome: nome, 
+                    nome: inputNome.value, 
                     prato: prato, 
                     tamanho: tamanho 
                 });
@@ -262,12 +260,12 @@
                 salvar();
                 renderizarEstrutura();
                 
-                document.getElementById('nome').value = '';
-                document.getElementById('nome').focus();
+                inputNome.value = '';
+                inputNome.focus();
             });
 
-            // Apagar/Finalizar
             window.finalizarPedido = function(id) {
+                // Usando confirm nativo, mas poderíamos fazer um modal bonito depois
                 if(confirm('Confirmar entrega do pedido?')) {
                     pedidos = pedidos.filter(p => p.id !== id);
                     salvar();
@@ -276,7 +274,7 @@
             };
 
             function salvar() {
-                localStorage.setItem('marmita_manager_final', JSON.stringify(pedidos));
+                localStorage.setItem('marmita_manager_ux', JSON.stringify(pedidos));
             }
 
             function formatarTempo(ms) {
@@ -286,7 +284,6 @@
                 return `${minutos < 10 ? '0' : ''}${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
             }
 
-            // Renderiza a estrutura (Cards)
             function renderizarEstrutura() {
                 contadorEl.innerText = pedidos.length;
                 listaEl.innerHTML = '';
@@ -315,7 +312,6 @@
                 atualizarRelogios();
             }
 
-            // Atualiza apenas os números do relógio
             function atualizarRelogios() {
                 const agora = Date.now();
                 pedidos.forEach(p => {
@@ -323,14 +319,12 @@
                     if (elTimer) {
                         const diff = agora - p.id;
                         elTimer.innerText = formatarTempo(diff);
-
-                        // Alerta visual discreto
                         if (diff > 600000) { 
-                            elTimer.style.color = '#e74c3c'; // Vermelho
+                            elTimer.style.color = '#e74c3c';
                         } else if (diff > 300000) {
-                            elTimer.style.color = '#f1c40f'; // Amarelo
+                            elTimer.style.color = '#f1c40f';
                         } else {
-                            elTimer.style.color = '#bdc3c7'; // Padrão
+                            elTimer.style.color = '#bdc3c7';
                         }
                     }
                 });
