@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gerenciador de Marmitas</title>
+    <style>
+        /* ESTILO PROFISSIONAL (DARK MODE) - Final Gold */
+        body {
+            background-color: #121212 !important;
+            color: #e0e0e0 !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* HEADER LIMPO */
+        header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 25px;
+        }
+        
+        h1 { 
+            color: #ff9f43; /* Laranja da identidade visual */
+            margin: 0; 
+            font-size: 22px; 
+            letter-spacing: -0.5px; 
+            font-weight: 600;
+        }
+        
+        p { 
+            color: #7f8c8d; 
+            font-size: 13px; 
+            margin-top: 5px; 
+            font-weight: 400;
+        }
+
+        /* INPUTS SÓBRIOS */
+        .input-group {
+            margin-bottom: 15px;
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+        }
+
+        label {
+            display: block;
+            color: #ff9f43;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            background: #2f3542;
+            color: white;
+            border: 1px solid #444;
+            padding: 10px;
+            font-size: 15px;
+            border-radius: 4px;
+            box-sizing: border-box; 
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #ff9f43;
+        }
+
+        /* BOTÃO PRINCIPAL */
+        button#btn-add {
+            width: 100%;
+            background-color: #ff9f43;
+            color: #121212;
+            font-weight: 700;
+            font-size: 15px;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            margin-top: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+        }
+        
+        button#btn-add:active { background-color: #e67e22; }
+
+        /* LISTA DE PEDIDOS */
+        .list-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            margin-top: 30px; 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px;
+        }
+
+        .list-title {
+            margin: 0; 
+            color: #f1f2f6; 
+            font-size: 16px; 
+            font-weight: 600;
+        }
+
+        .count-badge {
+            background: #2f3542; 
+            color: #ff9f43; 
+            padding: 2px 10px; 
+            border-radius: 12px; 
+            font-size: 12px; 
+            font-weight: bold;
+            border: 1px solid #444;
+        }
+
+        /* CARD DO PEDIDO */
+        .card-pedido {
+            background-color: #1e1e1e;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ff9f43;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .info-timer {
+            text-align: right;
+            min-width: 90px;
+        }
+
+        .timer-display {
+            color: #bdc3c7;
+            font-family: monospace;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .btn-finish {
+            background: transparent;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .btn-finish:hover {
+            background: #e74c3c;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Gerenciador de Marmitas</h1>
+        <p>Controle de Pedidos</p>
+    </header>
+
+    <div id="formulario">
+        <div class="input-group">
+            <label>Nome do Cliente</label>
+            <input type="text" id="nome" placeholder="Digite o nome..." autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <label>Prato Escolhido</label>
+            <select id="prato">
+                <option value="Frango Grelhado">Frango Grelhado</option>
+                <option value="Carne de Panela">Carne de Panela</option>
+                <option value="Omelete">Omelete (Vegetariano)</option>
+                <option value="Peixe">Peixe do Dia</option>
+                <option value="Bisteca">Bisteca Suína</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Tamanho da Marmita</label>
+            <select id="tamanho">
+                <option value="Pequena">Pequena (P)</option>
+                <option value="Média" selected>Média (M)</option>
+                <option value="Grande">Grande (G)</option>
+            </select>
+        </div>
+
+        <button id="btn-add">Registrar Pedido</button>
+    </div>
+
+    <div class="list-header">
+        <h3 class="list-title">Fila de Preparo</h3>
+        <span id="contador" class="count-badge">0</span>
+    </div>
+    
+    <div id="lista"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const listaEl = document.getElementById('lista');
+            const contadorEl = document.getElementById('contador');
+            const btnAdd = document.getElementById('btn-add');
+            let pedidos = [];
+
+            // Carregar dados
+            try {
+                const dados = localStorage.getItem('marmita_manager_final');
+                if (dados) pedidos = JSON.parse(dados);
+            } catch (e) { console.error("Erro ao carregar dados", e); }
+
+            // Inicialização
+            renderizarEstrutura();
+            setInterval(atualizarRelogios, 1000);
+
+            // Adicionar Pedido
+            btnAdd.addEventListener('click', function() {
+                const nome = document.getElementById('nome').value;
+                const prato = document.getElementById('prato').value;
+                const tamanho = document.getElementById('tamanho').value;
+
+                if (!nome.trim()) { 
+                    alert("Por favor, informe o nome do cliente."); 
+                    return; 
+                }
+
+                pedidos.push({ 
+                    id: Date.now(), 
+                    nome: nome, 
+                    prato: prato, 
+                    tamanho: tamanho 
+                });
+                
+                salvar();
+                renderizarEstrutura();
+                
+                document.getElementById('nome').value = '';
+                document.getElementById('nome').focus();
+            });
+
+            // Apagar/Finalizar
+            window.finalizarPedido = function(id) {
+                if(confirm('Confirmar entrega do pedido?')) {
+                    pedidos = pedidos.filter(p => p.id !== id);
+                    salvar();
+                    renderizarEstrutura();
+                }
+            };
+
+            function salvar() {
+                localStorage.setItem('marmita_manager_final', JSON.stringify(pedidos));
+            }
+
+            function formatarTempo(ms) {
+                const totalSegundos = Math.floor(ms / 1000);
+                const minutos = Math.floor(totalSegundos / 60);
+                const segundos = totalSegundos % 60;
+                return `${minutos < 10 ? '0' : ''}${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
+            }
+
+            // Renderiza a estrutura (Cards)
+            function renderizarEstrutura() {
+                contadorEl.innerText = pedidos.length;
+                listaEl.innerHTML = '';
+
+                if(pedidos.length === 0) {
+                    listaEl.innerHTML = '<p style="text-align:center; color:#555; margin-top: 30px; font-size: 14px;">Nenhum pedido pendente.</p>';
+                    return;
+                }
+
+                pedidos.forEach((p) => {
+                    const div = document.createElement('div');
+                    div.className = 'card-pedido';
+                    div.innerHTML = `
+                        <div>
+                            <strong style="font-size:15px; color: #f1f2f6;">${p.nome}</strong><br>
+                            <span style="color:#95a5a6; font-size: 13px;">${p.prato} • ${p.tamanho}</span>
+                        </div>
+                        <div class="info-timer">
+                            <span id="timer-${p.id}" class="timer-display">--:--</span>
+                            <button class="btn-finish" onclick="finalizarPedido(${p.id})">Concluir</button>
+                        </div>
+                    `;
+                    listaEl.appendChild(div);
+                });
+                
+                atualizarRelogios();
+            }
+
+            // Atualiza apenas os números do relógio
+            function atualizarRelogios() {
+                const agora = Date.now();
+                pedidos.forEach(p => {
+                    const elTimer = document.getElementById(`timer-${p.id}`);
+                    if (elTimer) {
+                        const diff = agora - p.id;
+                        elTimer.innerText = formatarTempo(diff);
+
+                        // Alerta visual discreto (amarelo > 5min, vermelho > 10min)
+                        if (diff > 600000) { 
+                            elTimer.style.color = '#e74c3c'; // Vermelho
+                        } else if (diff > 300000) {
+                            elTimer.style.color = '#f1c40f'; // Amarelo
+                        } else {
+                            elTimer.style.color = '#bdc3c7'; // Padrão
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
